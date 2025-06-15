@@ -7,12 +7,8 @@ import ticket.booking.entities.Train;
 import ticket.booking.entities.User;
 import ticket.booking.service.UserBookingService;
 import ticket.booking.util.UserServiceUtil;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.UUID;
+import java.util.*;
 
 public class App {
     public static void main(String[] args) {
@@ -23,7 +19,8 @@ public class App {
         try{
             userBookingService=new UserBookingService();
         }catch (IOException e){
-             System.out.println("There is something wrong");
+             System.out.println("There is something wrong:"+e.getMessage());
+            e.printStackTrace();
              return;
         }
         while(option!=7){

@@ -7,18 +7,16 @@ import ticket.booking.util.UserServiceUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
 public class UserBookingService {
     private User user;
-
     private List<User> userList;
-
     private ObjectMapper objMapper = new ObjectMapper();
-
-    private static final String USERS_PATH="../localDB/users.json";
+    private final String USERS_PATH = "app/src/main/java/ticket/booking/localDb/users.json";
 
     public UserBookingService() throws IOException{  //Default Constructor which loads up all Users
         loadUsers();
@@ -76,12 +74,33 @@ public class UserBookingService {
             return Boolean.FALSE;
         }
     }
-    public List<Train> getTrains(String source,String destination) {
-        try {
-            TrainService trainService = new TrainService();
-            return trainService.searchTrains(source, destination);
-        }catch(){
+    public List<Train> getTrains(String source, String destination){
+        TrainService trainService = new TrainService();
+        return trainService.searchTrains(source, destination);
+    }
+    public List<List<Integer>> fetchSeats(Train train){
+          List<List<Integer>> seating=train.getSeats();
+          return seating;
+    }
 
+    public Boolean bookTrainSeat(Train train, int row, int seat) {
+        try{
+            TrainService trainService = new TrainService();
+            List<List<Integer>> seats = train.getSeats();
+            if (row >= 0 && row < seats.size() && seat >= 0 && seat < seats.get(row).size()) {
+                if (seats.get(row).get(seat) == 0) {
+                    seats.get(row).set(seat, 1);
+                    train.setSeats(seats);
+                    trainService.addTrain(train);
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }catch (IOException ex){
+            return Boolean.FALSE;
         }
     }
 }
